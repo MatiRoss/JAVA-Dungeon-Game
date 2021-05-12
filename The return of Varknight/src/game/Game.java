@@ -6,6 +6,7 @@ import enemies.Rat;
 import menu.*;
 import gameBoard.Board;
 import tools.Timer;
+
 import java.util.Collections;
 import java.util.Scanner;
 
@@ -79,7 +80,7 @@ public class Game {
                         System.out.println(cell.eventDescription());
                         System.out.println(" ---------------------------------------------------");
                         if (cell instanceof Enemy) {
-                            System.out.println(player.showStats(player));
+                          player.showStats(player);
                             System.out.println(((Enemy) cell).showStats());
                             text.FightOrFlee();
                             boolean ennemyChoice = true;
@@ -87,12 +88,12 @@ public class Game {
                                 int fightChoice = keyboard.nextInt();
                                 switch (fightChoice) {
                                     case 1:
-                                        System.out.println(player.showStats(player));
+                                        player.showStats(player);
                                         ennemyChoice = false;
                                         fight(cell, diceValue);
                                         break;
                                     case 2:
-                                        System.out.println(player.showStats(player));
+                                       player.showStats(player);
                                         ennemyChoice = false;
                                         flee();
                                         break;
@@ -214,7 +215,7 @@ public class Game {
 
         if (newCell instanceof Enemy) {
             ((Enemy) newCell).setDead(false);
-            System.out.println(player.showStats(player));
+            player.showStats(player);
             System.out.println(((Enemy) newCell).showStats());
             newCell.interaction(player, newCell);
             if (((Enemy) newCell).isDead()) {

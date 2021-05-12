@@ -73,6 +73,7 @@ public abstract class Character {
     /**
      * Method that displays the inventory to the player as a list of all objects contained in the bag.
      * It takes one parameter :
+     *
      * @param player : the current player
      */
     public void displayInventory(Character player) {
@@ -104,6 +105,7 @@ public abstract class Character {
      * Method that allows the player to interact with objects in inventory.
      * When used, the item disappears from the inventory.
      * It requires one parameter :
+     *
      * @param player : the current player
      */
     public void useItem(Character player) {
@@ -172,6 +174,10 @@ public abstract class Character {
                         }
                     } else {
                         System.out.println("... Mais vous avez déjà atteint votre maximum de puissance d'attaque!");
+                        System.out.println(" ---------------------------------------------------");
+
+                        ((Wizard) player).setWeapon((new Fireball()));
+                        player.getInventory().inventory[0] = null;
                     }
                 } else if (weapon instanceof Thunderstrike) {
                     if (player.getAttack() < player.getAttackMax()) {
@@ -184,10 +190,14 @@ public abstract class Character {
                             System.out.println("Vos dégats augmentent de " + ((Thunderstrike) weapon).getPower() + " et passent à " + player.getAttack() + ".");
                             System.out.println(" ---------------------------------------------------");
                             ((Wizard) player).setHasThunderstrike(true);
+
                         } else {
                             System.out.println("... Mais vous possédez déjà le " + ((Thunderstrike) weapon).getName() + "!");
                             System.out.println(" ---------------------------------------------------");
                         }
+                        ((Wizard) player).setWeapon((new Thunderstrike()));
+
+                        player.getInventory().inventory[0] = null;
                     } else {
                         System.out.println('\n' + "... Mais vous avez déjà atteint votre maximum de puissance d'attaque!");
                     }
@@ -235,17 +245,16 @@ public abstract class Character {
                         player.setHp(player.getHp() + ((HealthPotion) potion2).getHealth());
                         if (player.getHp() > player.getHpMax()) {
                             player.setHp(player.getHpMax());
-                            player.getInventory().inventory[3] = null;
                         }
                         System.out.println("Vous avez désormais " + player.getHp() + " points de vie.");
                         System.out.println("----------------------------------------------------");
+                        player.getInventory().inventory[3] = null;
                     } else {
                         System.out.println("... Mais vous avez déjà atteint votre maximum de points de vie!");
                         System.out.println(" ---------------------------------------------------");
                     }
                 }
                 break;
-
 
             case 4:
                 Object bigPotion1 = player.getInventory().inventory[4];
@@ -361,31 +370,33 @@ public abstract class Character {
 
     /**
      * Method that displays the stats of the player.
-     * @return the player's name, hp, attack and defense
+     * displays player's name, hp, attack and defense
+     * It takes one parameter :
+     *
+     * @param player : the current player
      */
-    public String showStats(Character player) {
+    public void showStats(Character player) {
         if (player instanceof Warrior) {
             if (((Warrior) player).getWeapon() == null && ((Warrior) player).getProtection() == null) {
-                return getName() + " ==>  PV : " + getHp() + " || ATK : " + getAttack() + " (Pas d'arme)" + " || DEF : 0 (Pas de protection)";
+                System.out.println(getName() + " ==>  PV : " + getHp() + " || ATK : " + getAttack() + " (Pas d'arme)" + " || DEF : 0 (Pas de protection)");
             } else if (((Warrior) player).getWeapon() == null || ((Warrior) player).getProtection() == null) {
                 if (((Warrior) player).getWeapon() == null) {
-                    return getName() + " ==>  PV : " + getHp() + "|| ATK : " + getAttack() + " (Pas d'arme)" + " || DEF : " + ((Warrior) player).getProtection().getDefense() + " (" + ((Warrior) player).getProtection().getName() + ")";
+                    System.out.println(getName() + " ==>  PV : " + getHp() + "|| ATK : " + getAttack() + " (Pas d'arme)" + " || DEF : " + ((Warrior) player).getProtection().getDefense() + " (" + ((Warrior) player).getProtection().getName() + ")");
                 } else if (((Warrior) player).getProtection() == null) {
-                    return getName() + " ==>  PV : " + getHp() + "|| ATK : " + getAttack() + " (" + ((Warrior) player).getWeapon().getName() + ")" + " || DEF : 0 (Pas de protection)";
+                    System.out.println(getName() + " ==>  PV : " + getHp() + "|| ATK : " + getAttack() + " (" + ((Warrior) player).getWeapon().getName() + ")" + " || DEF : 0 (Pas de protection)");
                 }
             }
         } else if (player instanceof Wizard) {
             if (((Wizard) player).getWeapon() == null && ((Wizard) player).getProtection() == null) {
-                return getName() + " ==>  PV : " + getHp() + " || ATK : " + getAttack() + " (Pas d'arme)" + " || DEF : 0 (Pas de protection)";
+                System.out.println(getName() + " ==>  PV : " + getHp() + " || ATK : " + getAttack() + " (Pas d'arme)" + " || DEF : 0 (Pas de protection)");
             } else if (((Wizard) player).getWeapon() == null || ((Wizard) player).getProtection() == null) {
                 if (((Wizard) player).getWeapon() == null) {
-                    return getName() + " ==>  PV : " + getHp() + "|| ATK : " + getAttack() + " (Pas d'arme)" + " || DEF : " + ((Wizard) player).getProtection().getDefense() + " (" + ((Warrior) player).getProtection().getName() + ")";
+                    System.out.println(getName() + " ==>  PV : " + getHp() + "|| ATK : " + getAttack() + " (Pas d'arme)" + " || DEF : " + ((Wizard) player).getProtection().getDefense() + " (" + ((Wizard) player).getProtection().getName() + ")");
                 } else if (((Wizard) player).getProtection() == null) {
-                    return getName() + " ==>  PV : " + getHp() + "|| ATK : " + getAttack() + " (" + ((Wizard) player).getWeapon().getName() + ")" + " || DEF : 0 (Pas de protection)";
+                    System.out.println(getName() + " ==>  PV : " + getHp() + "|| ATK : " + getAttack() + " (" + ((Wizard) player).getWeapon().getName() + ")" + " || DEF : 0 (Pas de protection)");
                 }
             }
         }
-        return getName() + " ==>  PV : " + getHp() + " || ATK : " + getAttack() + " (Pas d'arme)" + " || DEF : 0 (Pas de protection)";
     }
 
     @Override

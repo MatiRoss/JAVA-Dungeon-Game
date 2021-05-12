@@ -2,7 +2,6 @@ package equipments;
 
 import game.Cell;
 
-
 /**
  * Class that represents the archetype of offensive items.
  * It inherits from Cell
