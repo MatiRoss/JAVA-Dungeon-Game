@@ -1,5 +1,6 @@
 package characters;
 
+import enemies.Enemy;
 import equipments.*;
 import menu.MenuText;
 
@@ -206,10 +207,18 @@ public abstract class Character {
 
 
             case 1:
-
-                ((Warrior) player).setProtection((new Shield()));
-                player.getInventory().inventory[1] = null;
-
+                Object protection = player.getInventory().inventory[1];
+                if (protection instanceof Shield) {
+                    ((Warrior) player).setProtection((new Shield()));
+                    System.out.println("Vous vous équipez du bouclier.");
+                    System.out.println("Votre défense passe à " + ((Warrior) player).getProtection().getDefense() + ".");
+                    player.getInventory().inventory[1] = null;
+                } else if (protection instanceof Philter) {
+                    ((Wizard) player).setProtection((new Philter()));
+                    System.out.println("Vous buvez le philtre de protection.");
+                    System.out.println("Votre défense passe à " + ((Wizard) player).getProtection().getDefense() + ".");
+                    player.getInventory().inventory[1] = null;
+                }
                 break;
 
             case 2:
@@ -311,8 +320,24 @@ public abstract class Character {
             default:
                 displayInventory(player);
         }
-        text.FightOrFlee();
     }
+
+    public void playerAttack(Character player, Enemy enemy) {
+        while (enemy.getHp() > 0 && player.getHp() > 0) {
+            enemy.setDead(false);
+            System.out.println("_______________________________________________________");
+            System.out.println("Vous attaquez le " + enemy.getName() + " et lui infligez " + player.getAttack() + " points de dégats");
+            enemy.setHp(enemy.getHp() - player.getAttack());
+            if (enemy.getHp() > 0) {
+                System.out.println("L'ennemi a encore " + enemy.getHp() + " points de vie.");
+            } else {
+                enemy.setDead(true);
+                System.out.println("Vous avez vaincu le " + enemy.getName() + "!");
+            }
+            System.out.println("----------------------------------------------------");
+        }
+    }
+
 
     public Inventory getInventory() {
         return inventory;
@@ -397,6 +422,7 @@ public abstract class Character {
                 }
             }
         }
+        System.out.println("--------------------------------------------------------");
     }
 
     @Override

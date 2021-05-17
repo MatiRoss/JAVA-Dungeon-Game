@@ -2,6 +2,7 @@ package enemies;
 
 import characters.Character;
 import characters.Warrior;
+import characters.Wizard;
 import game.*;
 import menu.MenuText;
 
@@ -60,34 +61,81 @@ public class Enemy extends Cell {
      */
     @Override
     public void interaction(Character player, Cell cell) {
-        while (getHp() > 0 && player.getHp() > 0) {
-            setDead(false);
-            MenuText text = new MenuText();
-            System.out.println("_______________________________________________________");
-            System.out.println("Vous attaquez le " + getName() + " et lui infligez " + player.getAttack() + " points de dégats");
-            setHp(getHp() - player.getAttack());
-            if (getHp() > 0) {
-                System.out.println("L'ennemi a encore " + getHp() + " points de vie.");
-                System.out.println("----------------------------------------------------");
-                if (player instanceof Warrior) {
+        for (int tour = 1; !isDead; tour++) {
+        if (((Enemy) cell).getHp() > 0 && player.getHp() > 0) {
 
+                System.out.println("TOUR " + tour);
+                tour++;
+                player.playerAttack(player, (Enemy) cell);
+
+                if (((Enemy) cell).getHp() > 0) {
+                    if (player instanceof Warrior) {
+                        if (((Warrior) player).getProtection() != null) {
+                            System.out.println("TOUR " + tour);
+                            enemyAttackShield(player);
+                        } else {
+                            System.out.println("TOUR " + tour);
+                            ennemyAttack(player);
+                        }
+                    } else if (player instanceof Wizard) {
+                        if (((Wizard) player).getProtection() != null) {
+                            System.out.println("TOUR " + tour);
+                            enemyAttackPhilter(player);
+                        } else {
+                            System.out.println("TOUR " + tour);
+                            ennemyAttack(player);
+                        }
+                    }
                 }
-                System.out.println("Le " + getName() + " vous attaque et vous inflige " + getAttack() + " points de dégats");
-                player.setHp(player.getHp() - getAttack());
-                if (player.getHp() <= 0) {
-                    System.out.println('\n' + "Le " + getName() + " vous porte un coup fatal...");
-                    System.out.println("...vous mourrez dans d'atroces souffrances.");
-                    text.youLose();
-                } else {
-                    System.out.println("Il vous reste " + player.getHp() + " points de vie.");
-                }
-            } else if (getHp() <= 0) {
-                setDead(true);
-                System.out.println("Vous avez vaincu le " + getName() + "!");
-                System.out.println("----------------------------------------------------");
             }
         }
     }
+
+    public void enemyAttackPhilter(Character player) {
+        System.out.println("_______________________________________________________");
+        System.out.println("Le " + getName() + " vous attaque... mais votre philtre vous protège!");
+        System.out.println("Le " + getName() + " inflige " + getAttack() + " points de dégats à votre armure magique.");
+        ((Wizard) player).getProtection().setDefense(((Wizard) player).getProtection().getDefense() - getAttack());
+        if (((Wizard) player).getProtection().getDefense() > 0) {
+            System.out.println("Votre philtre vous permet d'encaisser encore " + ((Wizard) player).getProtection().getDefense() + " points de dégats.");
+            System.out.println("----------------------------------------------------");
+        } else {
+            System.out.println("L'effet du philtre se dissipe!");
+            System.out.println("----------------------------------------------------");
+            ((Wizard) player).setProtection(null);
+        }
+    }
+
+    public void enemyAttackShield(Character player) {
+        System.out.println("_______________________________________________________");
+        System.out.println("Le " + getName() + " vous attaque... mais vous parez le coup avec votre bouclier!");
+        ((Warrior) player).getProtection().setDefense(((Warrior) player).getProtection().getDefense() - getAttack());
+        System.out.println("Le " + getName() + " inflige " + getAttack() + " points de dégats à votre bouclier.");
+        if (((Warrior) player).getProtection().getDefense() > 0) {
+            System.out.println("Il peut encore encaisser " + ((Warrior) player).getProtection().getDefense() + " points de dégats.");
+            System.out.println("----------------------------------------------------");
+        } else {
+            System.out.println("Le " + getName() + " a détruit votre bouclier!");
+            System.out.println("----------------------------------------------------");
+            ((Warrior) player).setProtection(null);
+        }
+    }
+
+    public void ennemyAttack(Character player) {
+        MenuText text = new MenuText();
+        System.out.println("_______________________________________________________");
+        System.out.println("Le " + getName() + " vous attaque et vous inflige " + getAttack() + " points de dégats");
+        player.setHp(player.getHp() - getAttack());
+        if (player.getHp() <= 0) {
+            System.out.println('\n' + "Le " + getName() + " vous porte un coup fatal...");
+            System.out.println("...vous mourrez dans d'atroces souffrances.");
+            text.youLose();
+        } else {
+            System.out.println("Il vous reste " + player.getHp() + " points de vie.");
+            System.out.println("----------------------------------------------------");
+        }
+    }
+
 
     public String getName() {
         return name;

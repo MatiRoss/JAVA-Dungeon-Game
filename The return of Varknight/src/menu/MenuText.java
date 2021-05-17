@@ -64,6 +64,8 @@ public class MenuText {
         System.out.println("----------------------------------------------------");
         System.out.println("Lancer le dé?           OUI ('o')          NON ('n')");
         System.out.println("----------------------------------------------------");
+        System.out.println("Afficher inventaire         ('i')           ");
+        System.out.println("----------------------------------------------------");
 
     }
 

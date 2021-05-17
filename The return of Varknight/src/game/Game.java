@@ -50,7 +50,6 @@ public class Game {
         keyboard = new Scanner(System.in);
         text = new MenuText();
         board = new Board();
-        Collections.shuffle(board.getBoard());
     }
 
     /**
@@ -80,7 +79,7 @@ public class Game {
                         System.out.println(cell.eventDescription());
                         System.out.println(" ---------------------------------------------------");
                         if (cell instanceof Enemy) {
-                          player.showStats(player);
+                            player.showStats(player);
                             System.out.println(((Enemy) cell).showStats());
                             text.FightOrFlee();
                             boolean ennemyChoice = true;
@@ -93,30 +92,30 @@ public class Game {
                                         fight(cell, diceValue);
                                         break;
                                     case 2:
-                                       player.showStats(player);
+                                        player.showStats(player);
                                         ennemyChoice = false;
                                         flee();
                                         break;
                                     case 3:
+                                        player.showStats(player);
                                         player.displayInventory(player);
                                         player.useItem(player);
+                                        text.FightOrFlee();
                                 }
                             }
                         } else {
-                      /*     text.displayInventory();
-                            String displayIventory = keyboard.next();
-                           if (displayIventory.equals("i")) {
-                                player.displayInventory(player);
-                                player.useItem(player);
-                            }else {
-
-                            }
-                           */
+                            player.showStats(player);
                             cell.interaction(player, cell);
+
                         }
                     } else if (board.getPlayerPosition() > board.getBoard().size()) {
                         throw new CharacterOutOfBoard();
                     }
+                } else if (lanceDe.equals("i")) {
+                    player.showStats(player);
+                    player.displayInventory(player);
+                    player.useItem(player);
+
                 } else if (lanceDe.equals("r")) {
                     startNewGame();
                 } else {
@@ -206,6 +205,9 @@ public class Game {
     public void flee() {
         int diceValue2 = player.throwDice();
         int newPosition = board.getPlayerPosition() - diceValue2;
+        if (newPosition <= 0) {
+            newPosition = 1;
+        }
         board.setPlayerPosition(newPosition);
         Cell newCell = board.getBoard().get(newPosition);
         System.out.println("Vous fuyez lâchement... Votre couardise vous ramène à la case " + newPosition + ".");
@@ -222,6 +224,7 @@ public class Game {
                 board.getBoard().set((newPosition), new Rat());
             }
         } else {
+            player.showStats(player);
             newCell.interaction(player, newCell);
         }
     }

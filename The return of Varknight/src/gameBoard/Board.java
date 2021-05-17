@@ -3,13 +3,16 @@ package gameBoard;
 import enemies.*;
 import equipments.*;
 import game.*;
+
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Class that represents the game board.
  * The board is an ArrayList of objects of type Cell.
  * It has an integer attribute playerPosition representing the position of the player on the current board.
  * It has different integer attributes that lets you handle the numbers of objects on the board when generating a new game board.
+ *
  * @see Cell
  */
 public class Board {
@@ -34,6 +37,7 @@ public class Board {
     /**
      * Board constructor.
      * It uses the integer attributes of the class to determine how many objects will be on the board when generated.
+     *
      * @see Board#generateBoard()
      */
     public Board() {
@@ -59,6 +63,7 @@ public class Board {
     /**
      * Board constructor with higher difficulty.
      * It uses the integer attributes of the class to determine how many objects will be on the board when generated.
+     *
      * @see Board#generateBoard()
      */
     public Board(String difficulty) {
@@ -122,6 +127,7 @@ public class Board {
         for (int i = 0; i < nbShields; i++) {
             board.add(new Shield());
         }
+        Collections.shuffle(this.board);
     }
 
     public ArrayList<Cell> getBoard() {
