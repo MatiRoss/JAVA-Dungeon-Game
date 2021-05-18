@@ -88,6 +88,15 @@ public class MenuText {
         System.out.println("    Vous avez perdu!");
         System.out.println("------------------------");
     }
+
+    public void newLevel() {
+        System.out.println("_____________________________________________");
+        System.out.println("               Niveau II");
+        System.out.println("");
+        System.out.println("Attention, les monstres sont plus nombreux...");
+        System.out.println("        ... et vous trouverez moins d'objets!");
+        System.out.println("---------------------------------------------");
+    }
 }
 
 

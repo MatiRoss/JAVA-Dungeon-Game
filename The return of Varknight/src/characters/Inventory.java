@@ -113,7 +113,6 @@ public class Inventory {
         return (BigHealthPotion) this.inventory[5];
     }
 
-
     @Override
     public String toString() {
         return "Inventory{" +

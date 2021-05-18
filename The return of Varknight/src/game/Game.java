@@ -1,6 +1,7 @@
 package game;
 
 import characters.Character;
+import characters.Inventory;
 import enemies.Enemy;
 import enemies.Rat;
 import menu.*;
@@ -61,65 +62,65 @@ public class Game {
      * @see Character#throwDice()
      */
     public void playGame() throws Exception {
-
         while (board.getPlayerPosition() < board.getBoard().size() && player.getHp() > 0) {
             try {
                 timer.waitSec(1, true, true);
                 text.rollDice();
                 int diceValue = player.throwDice();
                 String lanceDe = keyboard.next();
-                if (lanceDe.equals("o")) {
-                    Cell cell = board.getBoard().get(board.getPlayerPosition());
-                    System.out.println(" ---------------------------------------------------");
-                    System.out.println("        Vous lancez le dé et faites un... " + diceValue + " !");
-                    board.setPlayerPosition(board.getPlayerPosition() + diceValue);
-                    if (board.getPlayerPosition() < board.getBoard().size()) {
-                        System.out.println("        Vous avancez jusqu'à la case " + board.getPlayerPosition() + ".");
+                switch (lanceDe) {
+                    case "o":
+                        Cell cell = board.getBoard().get(board.getPlayerPosition());
                         System.out.println(" ---------------------------------------------------");
-                        System.out.println(cell.eventDescription());
-                        System.out.println(" ---------------------------------------------------");
-                        if (cell instanceof Enemy) {
+                        System.out.println("        Vous lancez le dé et faites un... " + diceValue + " !");
+                        board.setPlayerPosition(board.getPlayerPosition() + diceValue);
+                        if (board.getPlayerPosition() < board.getBoard().size()) {
+                            System.out.println("        Vous avancez jusqu'à la case " + board.getPlayerPosition() + ".");
+                            System.out.println(" ---------------------------------------------------");
+                            System.out.println(cell.eventDescription());
+                            System.out.println(" ---------------------------------------------------");
                             player.showStats(player);
-                            System.out.println(((Enemy) cell).showStats());
-                            text.FightOrFlee();
-                            boolean ennemyChoice = true;
-                            while (ennemyChoice) {
-                                int fightChoice = keyboard.nextInt();
-                                switch (fightChoice) {
-                                    case 1:
-                                        player.showStats(player);
-                                        ennemyChoice = false;
-                                        fight(cell, diceValue);
-                                        break;
-                                    case 2:
-                                        player.showStats(player);
-                                        ennemyChoice = false;
-                                        flee();
-                                        break;
-                                    case 3:
-                                        player.showStats(player);
-                                        player.displayInventory(player);
-                                        player.useItem(player);
-                                        text.FightOrFlee();
+                            if (cell instanceof Enemy) {
+                                System.out.println(((Enemy) cell).showStats());
+                                System.out.println("--------------------------------------------------------");
+                                text.FightOrFlee();
+                                boolean ennemyChoice = true;
+                                while (ennemyChoice) {
+                                    int fightChoice = keyboard.nextInt();
+                                    switch (fightChoice) {
+                                        case 1:
+                                            ennemyChoice = false;
+                                            fight(cell, diceValue);
+                                            break;
+                                        case 2:
+                                            ennemyChoice = false;
+                                            flee();
+                                            break;
+                                        case 3:
+                                            player.displayInventory(player);
+                                            player.useItem(player);
+                                            player.showStats(player);
+                                            System.out.println(((Enemy) cell).showStats());
+                                            text.FightOrFlee();
+                                    }
                                 }
+                            } else {
+                                cell.interaction(player, cell);
                             }
-                        } else {
-                            player.showStats(player);
-                            cell.interaction(player, cell);
-
+                        } else if (board.getPlayerPosition() > board.getBoard().size()) {
+                            throw new CharacterOutOfBoard();
                         }
-                    } else if (board.getPlayerPosition() > board.getBoard().size()) {
-                        throw new CharacterOutOfBoard();
-                    }
-                } else if (lanceDe.equals("i")) {
-                    player.showStats(player);
-                    player.displayInventory(player);
-                    player.useItem(player);
-
-                } else if (lanceDe.equals("r")) {
-                    startNewGame();
-                } else {
-                    exitGame();
+                        break;
+                    case "i":
+                        player.displayInventory(player);
+                        player.useItem(player);
+                        break;
+                    case "r":
+                        startNewGame();
+                        break;
+                    default:
+                        exitGame();
+                        break;
                 }
             } catch (CharacterOutOfBoard e) {
                 board.setPlayerPosition(board.getBoard().size());
@@ -127,11 +128,8 @@ public class Game {
                 System.out.println(" ---------------------------------------------------");
             }
         }
-        if (player.getHp() <= 0) {
-            restartChoice();
-        }
         text.youWin();
-        restartChoice();
+        nextLevelChoice();
     }
 
     /**
@@ -145,6 +143,7 @@ public class Game {
         text.launchGame();
         board.setPlayerPosition(0);
         player.setHp(player.getHpMin());
+        player.setInventory(new Inventory());
         player.setAttack(player.getAttackMin());
         this.board = new Board();
         playGame();
@@ -159,6 +158,9 @@ public class Game {
     public void restartGame() throws Exception {
         text.launchGame();
         board.setPlayerPosition(0);
+        player.setHp(player.getHpMin());
+        player.setInventory(new Inventory());
+        player.setAttack(player.getAttackMin());
         this.board = new Board();
         playGame();
     }
@@ -168,15 +170,39 @@ public class Game {
      *
      * @throws Exception of type CharacterOutOfBoard
      */
-    public void restartChoice() throws Exception {
-        System.out.println("Voulez-vous réessayer?          OUI ('o')      NON ('n')");
+    public void nextLevelChoice() throws Exception {
+        System.out.println("Recommencer le niveau      ----         ('r')");
+        System.out.println("Passer au niveau suivant   ----         ('n')");
+        System.out.println("Quitter le jeu             ----         ('q')");
         String restartChoice = keyboard.next();
-        if (restartChoice.equals("o")) {
-            startNewGame();
+        if (restartChoice.equals("r")) {
+            restartGame();
+        }
+        if (restartChoice.equals("n")) {
+            nextLevel();
         } else {
             exitGame();
         }
     }
+
+    public void nextLevel() throws Exception {
+        text.newLevel();
+        board.setPlayerPosition(0);
+        this.board = new Board("hard");
+        playGame();
+    }
+
+    public void restartChoice() throws Exception {
+        System.out.println("Recommencer le niveau      ----         ('r')");
+        System.out.println("Quitter le jeu             ----         ('q')");
+        String restartChoice = keyboard.next();
+        if (restartChoice.equals("r")) {
+            restartGame();
+        } else {
+            exitGame();
+        }
+    }
+
 
     /**
      * Method that takes 2 paramers.
@@ -189,9 +215,12 @@ public class Game {
      * @see Enemy
      * @see Cell
      */
-    public void fight(Cell cell, int diceValue) {
+    public void fight(Cell cell, int diceValue) throws Exception {
         ((Enemy) cell).setDead(false);
         cell.interaction(player, cell);
+        if (player.getHp() <= 0) {
+            restartChoice();
+        }
         if (((Enemy) cell).isDead()) {
             board.getBoard().set((board.getPlayerPosition() - diceValue), new Rat());
         }
@@ -224,7 +253,6 @@ public class Game {
                 board.getBoard().set((newPosition), new Rat());
             }
         } else {
-            player.showStats(player);
             newCell.interaction(player, newCell);
         }
     }

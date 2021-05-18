@@ -5,6 +5,7 @@ import characters.Warrior;
 import characters.Wizard;
 import game.*;
 import menu.MenuText;
+import tools.Timer;
 
 /**
  * Class that represents the enemy archetype. It extends Cell as it can be found on the game board's cells.
@@ -61,34 +62,86 @@ public class Enemy extends Cell {
      */
     @Override
     public void interaction(Character player, Cell cell) {
-        for (int tour = 1; !isDead; tour++) {
-        if (((Enemy) cell).getHp() > 0 && player.getHp() > 0) {
-
+        Timer timer = new Timer();
+        while (((Enemy) cell).getHp() > 0 && player.getHp() > 0) {
+            for (int tour = 1; (!isDead && player.getHp() > 0); tour++) {
                 System.out.println("TOUR " + tour);
+                timer.waitSec(2, true, true);
                 tour++;
                 player.playerAttack(player, (Enemy) cell);
-
                 if (((Enemy) cell).getHp() > 0) {
                     if (player instanceof Warrior) {
                         if (((Warrior) player).getProtection() != null) {
                             System.out.println("TOUR " + tour);
-                            enemyAttackShield(player);
+                            timer.waitSec(2, true, true);
+                            if (cell instanceof GoblinKing) {
+                                ((GoblinKing) cell).stun(player);
+                                if (((GoblinKing) cell).hasStunned()) {
+                                    if (((Warrior) player).getProtection() != null && player.getHp() > 0) {
+                                        tour++;
+                                        System.out.println("TOUR " + tour);
+                                        timer.waitSec(2, true, true);
+                                        enemyAttackShield(player);
+                                    } else {
+                                        System.out.println("TOUR " + tour);
+                                        timer.waitSec(2, true, true);
+                                        enemyAttack(player);
+                                    }
+                                }
+                            } else {
+                                enemyAttackShield(player);
+                            }
                         } else {
-                            System.out.println("TOUR " + tour);
-                            ennemyAttack(player);
+                            tour = attackNoShield(player, cell, tour);
                         }
                     } else if (player instanceof Wizard) {
                         if (((Wizard) player).getProtection() != null) {
                             System.out.println("TOUR " + tour);
-                            enemyAttackPhilter(player);
+                            timer.waitSec(2, true, true);
+                            if (cell instanceof GoblinKing) {
+                                ((GoblinKing) cell).stun(player);
+                                if (((GoblinKing) cell).hasStunned()) {
+                                    if (((Wizard) player).getProtection() != null && player.getHp() > 0) {
+                                        tour++;
+                                        System.out.println("TOUR " + tour);
+                                        timer.waitSec(2, true, true);
+                                        enemyAttackPhilter(player);
+                                    } else {
+                                        System.out.println("TOUR " + tour);
+                                        timer.waitSec(2, true, true);
+                                        enemyAttack(player);
+                                    }
+                                }
+                            } else {
+                                enemyAttackPhilter(player);
+                            }
                         } else {
-                            System.out.println("TOUR " + tour);
-                            ennemyAttack(player);
+                            tour = attackNoShield(player, cell, tour);
                         }
                     }
                 }
             }
         }
+    }
+
+    private int attackNoShield(Character player, Cell cell, int tour) {
+        Timer timer = new Timer();
+        if (cell instanceof GoblinKing) {
+            System.out.println("TOUR " + tour);
+            timer.waitSec(2, true, true);
+            ((GoblinKing) cell).stun(player);
+            if (((GoblinKing) cell).hasStunned() && player.getHp() > 0) {
+                tour++;
+                System.out.println("TOUR " + tour);
+                timer.waitSec(2, true, true);
+                enemyAttack(player);
+            }
+        } else {
+            System.out.println("TOUR " + tour);
+            timer.waitSec(2, true, true);
+            enemyAttack(player);
+        }
+        return tour;
     }
 
     public void enemyAttackPhilter(Character player) {
@@ -121,7 +174,7 @@ public class Enemy extends Cell {
         }
     }
 
-    public void ennemyAttack(Character player) {
+    public void enemyAttack(Character player) {
         MenuText text = new MenuText();
         System.out.println("_______________________________________________________");
         System.out.println("Le " + getName() + " vous attaque et vous inflige " + getAttack() + " points de dégats");

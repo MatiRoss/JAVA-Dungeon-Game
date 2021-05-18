@@ -81,13 +81,13 @@ public abstract class Character {
         System.out.println("Vous fouillez dans votre sac..." + '\n');
         for (int i = 0; i < player.getInventory().inventory.length; i++) {
             if (player.getInventory().inventory[i] == null) {
-                System.out.println("[" + i + "] (Utiliser)" + "            <Vide>");
+                System.out.println("[" + (i + 1) + "] (Utiliser)" + "            <Vide>");
             } else {
-                System.out.println("[" + i + "] (Utiliser)" + "            " + player.getInventory().inventory[i]);
+                System.out.println("[" + (i + 1) + "] (Utiliser)" + "            " + player.getInventory().inventory[i]);
             }
         }
         System.out.println("");
-        System.out.println("[9] Retour");
+        System.out.println("[0] Retour");
         System.out.println("");
     }
 
@@ -110,11 +110,10 @@ public abstract class Character {
      * @param player : the current player
      */
     public void useItem(Character player) {
-        MenuText text = new MenuText();
         Scanner keyboard = new Scanner(System.in);
         int usableItem = keyboard.nextInt();
         switch (usableItem) {
-            case 0:
+            case 1:
                 Object weapon = player.getInventory().inventory[0];
 
                 if (weapon instanceof Sword) {
@@ -206,7 +205,7 @@ public abstract class Character {
                 break;
 
 
-            case 1:
+            case 2:
                 Object protection = player.getInventory().inventory[1];
                 if (protection instanceof Shield) {
                     ((Warrior) player).setProtection((new Shield()));
@@ -221,7 +220,7 @@ public abstract class Character {
                 }
                 break;
 
-            case 2:
+            case 3:
                 Object potion1 = player.getInventory().inventory[2];
                 if (potion1 instanceof HealthPotion) {
                     if (player.getHp() < player.getHpMax()) {
@@ -244,7 +243,7 @@ public abstract class Character {
                 break;
 
 
-            case 3:
+            case 4:
                 Object potion2 = player.getInventory().inventory[3];
                 if (potion2 instanceof HealthPotion) {
                     if (player.getHp() < player.getHpMax()) {
@@ -265,7 +264,7 @@ public abstract class Character {
                 }
                 break;
 
-            case 4:
+            case 5:
                 Object bigPotion1 = player.getInventory().inventory[4];
                 if (bigPotion1 instanceof BigHealthPotion) {
                     if (player.getHp() < player.getHpMax()) {
@@ -292,7 +291,7 @@ public abstract class Character {
                 break;
 
 
-            case 5:
+            case 6:
                 Object bigPotion2 = player.getInventory().inventory[5];
                 if (bigPotion2 instanceof BigHealthPotion) {
                     if (player.getHp() < player.getHpMax()) {
@@ -315,7 +314,7 @@ public abstract class Character {
                     }
                 }
                 break;
-            case 9:
+            case 0:
                 break;
             default:
                 displayInventory(player);
@@ -323,24 +322,26 @@ public abstract class Character {
     }
 
     public void playerAttack(Character player, Enemy enemy) {
-        while (enemy.getHp() > 0 && player.getHp() > 0) {
-            enemy.setDead(false);
-            System.out.println("_______________________________________________________");
-            System.out.println("Vous attaquez le " + enemy.getName() + " et lui infligez " + player.getAttack() + " points de dégats");
-            enemy.setHp(enemy.getHp() - player.getAttack());
-            if (enemy.getHp() > 0) {
-                System.out.println("L'ennemi a encore " + enemy.getHp() + " points de vie.");
-            } else {
-                enemy.setDead(true);
-                System.out.println("Vous avez vaincu le " + enemy.getName() + "!");
-            }
-            System.out.println("----------------------------------------------------");
+        enemy.setDead(false);
+        System.out.println("_______________________________________________________");
+        System.out.println("Vous attaquez le " + enemy.getName() + " et lui infligez " + player.getAttack() + " points de dégats");
+        enemy.setHp(enemy.getHp() - player.getAttack());
+        if (enemy.getHp() > 0) {
+            System.out.println("L'ennemi a encore " + enemy.getHp() + " points de vie.");
+        } else {
+            enemy.setDead(true);
+            System.out.println("Vous avez vaincu le " + enemy.getName() + "!");
         }
-    }
+        System.out.println("----------------------------------------------------");
 
+    }
 
     public Inventory getInventory() {
         return inventory;
+    }
+
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
     }
 
     public void setName(String name) {
@@ -404,6 +405,8 @@ public abstract class Character {
         if (player instanceof Warrior) {
             if (((Warrior) player).getWeapon() == null && ((Warrior) player).getProtection() == null) {
                 System.out.println(getName() + " ==>  PV : " + getHp() + " || ATK : " + getAttack() + " (Pas d'arme)" + " || DEF : 0 (Pas de protection)");
+            } else if (((Warrior) player).getWeapon() != null && ((Warrior) player).getProtection() != null) {
+                System.out.println(getName() + " ==>  PV : " + getHp() + "|| ATK : " + getAttack() + " (" + ((Warrior) player).getWeapon().getName() + ")" + " || DEF : " + ((Warrior) player).getProtection().getDefense() + " (" + ((Warrior) player).getProtection().getName() + ")");
             } else if (((Warrior) player).getWeapon() == null || ((Warrior) player).getProtection() == null) {
                 if (((Warrior) player).getWeapon() == null) {
                     System.out.println(getName() + " ==>  PV : " + getHp() + "|| ATK : " + getAttack() + " (Pas d'arme)" + " || DEF : " + ((Warrior) player).getProtection().getDefense() + " (" + ((Warrior) player).getProtection().getName() + ")");
@@ -414,6 +417,8 @@ public abstract class Character {
         } else if (player instanceof Wizard) {
             if (((Wizard) player).getWeapon() == null && ((Wizard) player).getProtection() == null) {
                 System.out.println(getName() + " ==>  PV : " + getHp() + " || ATK : " + getAttack() + " (Pas d'arme)" + " || DEF : 0 (Pas de protection)");
+            } else if (((Wizard) player).getWeapon() != null && ((Wizard) player).getProtection() != null) {
+                System.out.println(getName() + " ==>  PV : " + getHp() + "|| ATK : " + getAttack() + " (" + ((Wizard) player).getWeapon().getName() + ")" + " || DEF : " + ((Wizard) player).getProtection().getDefense() + " (" + ((Wizard) player).getProtection().getName() + ")");
             } else if (((Wizard) player).getWeapon() == null || ((Wizard) player).getProtection() == null) {
                 if (((Wizard) player).getWeapon() == null) {
                     System.out.println(getName() + " ==>  PV : " + getHp() + "|| ATK : " + getAttack() + " (Pas d'arme)" + " || DEF : " + ((Wizard) player).getProtection().getDefense() + " (" + ((Wizard) player).getProtection().getName() + ")");

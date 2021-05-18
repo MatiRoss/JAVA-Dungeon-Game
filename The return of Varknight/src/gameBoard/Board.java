@@ -72,17 +72,24 @@ public class Board {
         board = new ArrayList<Cell>();
         this.playerPosition = 0;
 
-        this.nbGobelins = 15;
-        this.nbSorcerers = 15;
-        this.nbDragons = 8;
-        this.nbClubs = 5;
-        this.nbSwords = 4;
-        this.nbThunderstrike = 5;
-        this.nbFireBalls = 2;
-        this.nbHealthPotions = 6;
+        this.nbGobelins = 13;
+        this.nbSorcerers = 13;
+        this.nbDragons = 9;
+        this.nbClubs = 3;
+        this.nbSwords = 2;
+        this.nbThunderstrike = 3;
+        this.nbFireBalls = 1;
+        this.nbHealthPotions = 4;
         this.nbBigHealthPotions = 2;
+        this.nbEmptyCells = 2;
+        this.nbGobelinKings = 8;
+        this.nbShields = 4;
 
         generateBoard();
+
+    }
+
+    public Board(int level) {
 
     }
 
