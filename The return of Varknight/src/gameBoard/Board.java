@@ -31,8 +31,8 @@ public class Board {
     private int nbEmptyCells;
     private int nbGobelinKings;
     private int nbShields;
+    private int nbPhilters;
 
-    private String difficulty;
 
     /**
      * Board constructor.
@@ -40,25 +40,6 @@ public class Board {
      *
      * @see Board#generateBoard()
      */
-    public Board() {
-        board = new ArrayList<Cell>();
-        this.playerPosition = 0;
-
-        this.nbGobelins = 10;
-        this.nbSorcerers = 10;
-        this.nbDragons = 4;
-        this.nbClubs = 5;
-        this.nbSwords = 4;
-        this.nbThunderstrike = 5;
-        this.nbFireBalls = 2;
-        this.nbHealthPotions = 6;
-        this.nbBigHealthPotions = 2;
-        this.nbEmptyCells = 4;
-        this.nbGobelinKings = 2;
-        this.nbShields = 10;
-
-        generateBoard();
-    }
 
     /**
      * Board constructor with higher difficulty.
@@ -66,31 +47,67 @@ public class Board {
      *
      * @see Board#generateBoard()
      */
-    public Board(String difficulty) {
-
-        this.difficulty = difficulty;
-        board = new ArrayList<Cell>();
-        this.playerPosition = 0;
-
-        this.nbGobelins = 13;
-        this.nbSorcerers = 13;
-        this.nbDragons = 9;
-        this.nbClubs = 3;
-        this.nbSwords = 2;
-        this.nbThunderstrike = 3;
-        this.nbFireBalls = 1;
-        this.nbHealthPotions = 4;
-        this.nbBigHealthPotions = 2;
-        this.nbEmptyCells = 2;
-        this.nbGobelinKings = 8;
-        this.nbShields = 4;
-
-        generateBoard();
-
-    }
 
     public Board(int level) {
+        if (level == 1) {
+            board = new ArrayList<Cell>();
+            this.playerPosition = 0;
 
+            this.nbGobelins = 9;
+            this.nbSorcerers = 9;
+            this.nbDragons = 4;
+            this.nbClubs = 5;
+            this.nbSwords = 4;
+            this.nbThunderstrike = 5;
+            this.nbFireBalls = 4;
+            this.nbHealthPotions = 6;
+            this.nbBigHealthPotions = 2;
+            this.nbEmptyCells = 4;
+            this.nbGobelinKings = 2;
+            this.nbShields = 5;
+            this.nbPhilters = 5;
+
+            generateBoard();
+        } else if (level == 2) {
+            board = new ArrayList<Cell>();
+            this.playerPosition = 0;
+
+            this.nbGobelins = 11;
+            this.nbSorcerers = 12;
+            this.nbDragons = 9;
+            this.nbClubs = 3;
+            this.nbSwords = 2;
+            this.nbThunderstrike = 3;
+            this.nbFireBalls = 1;
+            this.nbHealthPotions = 3;
+            this.nbBigHealthPotions = 2;
+            this.nbEmptyCells = 2;
+            this.nbGobelinKings = 8;
+            this.nbShields = 4;
+            this.nbPhilters = 4;
+
+            generateBoard();
+
+        } else if (level == 3) {
+            board = new ArrayList<Cell>();
+            this.playerPosition = 0;
+
+            this.nbGobelins = 10;
+            this.nbSorcerers = 10;
+            this.nbDragons = 15;
+            this.nbClubs = 4;
+            this.nbSwords = 3;
+            this.nbThunderstrike = 4;
+            this.nbFireBalls = 2;
+            this.nbHealthPotions = 3;
+            this.nbBigHealthPotions = 2;
+            this.nbEmptyCells = 4;
+            this.nbGobelinKings = 15;
+            this.nbShields = 3;
+            this.nbPhilters = 3;
+
+            generateBoard();
+        }
     }
 
     /**
@@ -133,6 +150,9 @@ public class Board {
         }
         for (int i = 0; i < nbShields; i++) {
             board.add(new Shield());
+        }
+        for (int i = 0; i < nbPhilters; i++) {
+            board.add(new Philter());
         }
         Collections.shuffle(this.board);
     }

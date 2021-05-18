@@ -50,7 +50,7 @@ public class Game {
         this.player = player;
         keyboard = new Scanner(System.in);
         text = new MenuText();
-        board = new Board();
+        board = new Board(1);
     }
 
     /**
@@ -128,8 +128,10 @@ public class Game {
                 System.out.println(" ---------------------------------------------------");
             }
         }
-        text.youWin();
-        nextLevelChoice();
+        if (player.getHp() > 0) {
+            text.youWin();
+            nextLevelChoice();
+        }
     }
 
     /**
@@ -145,7 +147,7 @@ public class Game {
         player.setHp(player.getHpMin());
         player.setInventory(new Inventory());
         player.setAttack(player.getAttackMin());
-        this.board = new Board();
+        this.board = new Board(1);
         playGame();
     }
 
@@ -161,7 +163,7 @@ public class Game {
         player.setHp(player.getHpMin());
         player.setInventory(new Inventory());
         player.setAttack(player.getAttackMin());
-        this.board = new Board();
+        this.board = new Board(1);
         playGame();
     }
 
@@ -188,7 +190,13 @@ public class Game {
     public void nextLevel() throws Exception {
         text.newLevel();
         board.setPlayerPosition(0);
-        this.board = new Board("hard");
+        if (this.board.equals(new Board(1))) {
+            board.setPlayerPosition(0);
+            this.board = new Board(2);
+        } else if (this.board.equals(new Board(2))) {
+            board.setPlayerPosition(0);
+            this.board = new Board(3);
+        }
         playGame();
     }
 
