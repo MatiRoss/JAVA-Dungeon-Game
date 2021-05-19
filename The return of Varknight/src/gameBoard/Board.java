@@ -68,6 +68,8 @@ public class Board {
             this.nbPhilters = 5;
 
             generateBoard();
+            Collections.shuffle(this.board);
+
         } else if (level == 2) {
             board = new ArrayList<Cell>();
             this.playerPosition = 0;
@@ -87,6 +89,7 @@ public class Board {
             this.nbPhilters = 4;
 
             generateBoard();
+            Collections.shuffle(this.board);
 
         } else if (level == 3) {
             board = new ArrayList<Cell>();
@@ -107,6 +110,7 @@ public class Board {
             this.nbPhilters = 3;
 
             generateBoard();
+            Collections.shuffle(this.board);
         }
     }
 

@@ -1,6 +1,10 @@
 import menu.Menu;
 import game.Game;
 
+import java.sql.*;
+
+import database.*;
+
 /**
  * Main class with entry point of the program.
  */
@@ -28,5 +32,8 @@ public class App {
 
         Game game = new Game(menu.getPlayer());
         game.playGame();
+
+        Database database = new Database();
+        database.insertNewHero(menu.getPlayer());
     }
 }
