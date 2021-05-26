@@ -2,12 +2,15 @@ package game;
 
 import characters.Character;
 import characters.Inventory;
+import database.Database;
 import enemies.Enemy;
 import enemies.Rat;
 import menu.*;
 import gameBoard.Board;
 import tools.Timer;
 
+import javax.xml.crypto.Data;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Scanner;
 
@@ -35,7 +38,7 @@ public class Game {
     private Character player;
     private Scanner keyboard;
     private Board board;
-
+    private Database database;
     private MenuText text;
     private Timer timer;
 
@@ -45,12 +48,13 @@ public class Game {
      *
      * @param player : required parameter that refers to the current player
      */
-    public Game(Character player) {
+    public Game(Character player) throws SQLException, ClassNotFoundException {
         timer = new Timer();
         this.player = player;
         keyboard = new Scanner(System.in);
         text = new MenuText();
         board = new Board(1);
+        this.database = new Database();
     }
 
     /**
@@ -65,6 +69,7 @@ public class Game {
         while (board.getPlayerPosition() < board.getBoard().size() && player.getHp() > 0) {
             try {
                 timer.waitSec(1, true, true);
+                database.updateHero(player);
                 text.rollDice();
                 int diceValue = player.throwDice();
                 String lanceDe = keyboard.next();
@@ -173,6 +178,7 @@ public class Game {
      * @throws Exception of type CharacterOutOfBoard
      */
     public void nextLevelChoice() throws Exception {
+        database.insertNewHero(player);
         System.out.println("Recommencer le niveau      ----         ('r')");
         System.out.println("Passer au niveau suivant   ----         ('n')");
         System.out.println("Quitter le jeu             ----         ('q')");
@@ -201,6 +207,7 @@ public class Game {
     }
 
     public void restartChoice() throws Exception {
+        database.updateHero(player);
         System.out.println("Recommencer le niveau      ----         ('r')");
         System.out.println("Quitter le jeu             ----         ('q')");
         String restartChoice = keyboard.next();

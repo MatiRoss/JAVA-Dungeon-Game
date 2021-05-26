@@ -1,9 +1,9 @@
 import menu.Menu;
 import game.Game;
 
-import java.sql.*;
-
 import database.*;
+
+import java.sql.SQLException;
 
 /**
  * Main class with entry point of the program.
@@ -22,18 +22,15 @@ public class App {
      * @throws Exception
      * @see Menu
      * @see Game
-     * @see Menu#createCharacter()
+     * @see Menu#characterSelection()
      * @see Game#playGame()
      */
     public static void main(String[] args) throws Exception {
-
         Menu menu = new Menu();
-        menu.createCharacter();
+        menu.characterSelection();
 
         Game game = new Game(menu.getPlayer());
         game.playGame();
 
-        Database database = new Database();
-        database.insertNewHero(menu.getPlayer());
     }
 }

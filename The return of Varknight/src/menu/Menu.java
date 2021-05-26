@@ -1,9 +1,11 @@
 package menu;
 
+import java.sql.SQLException;
 import java.util.Scanner;
 
 import characters.*;
 import characters.Character;
+import database.Database;
 
 /**
  * Class that represents the game menu.
@@ -17,6 +19,7 @@ import characters.Character;
 public class Menu {
     private Character player;
     private final Scanner keyboard;
+    private MenuText text;
 
     /**
      * Menu Constructor.
@@ -34,10 +37,31 @@ public class Menu {
      * @see Warrior
      * @see Wizard
      */
-    public void createCharacter() {
+    public void characterSelection() throws SQLException, ClassNotFoundException {
+        Database database = new Database();
+        text = new MenuText();
 
-        MenuText text = new MenuText();
         text.launchMenu();
+        text.characterSelection();
+        int characterChoice = keyboard.nextInt();
+        if (characterChoice == 1) {
+            createNewCharacter();
+            database.insertNewHero(player);
+        } else if (characterChoice == 2) {
+            database.displayHeroes();
+            database.loadHero(player);
+        } else {
+            System.exit(0);
+        }
+        text.launchGame();
+    }
+
+    public Character getPlayer() {
+        return player;
+    }
+
+    public void createNewCharacter() {
+        text.characterCreation();
         boolean choice = true;
         while (choice) {
             int playerCharacter = keyboard.nextInt();
@@ -106,11 +130,5 @@ public class Menu {
                 System.out.println("Veuillez taper 1,2 ou 3 et pas autre chose!!");
             }
         }
-        text.launchGame();
-
-    }
-
-    public Character getPlayer() {
-        return player;
     }
 }

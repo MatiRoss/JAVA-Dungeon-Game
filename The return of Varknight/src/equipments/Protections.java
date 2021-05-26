@@ -46,7 +46,7 @@ public abstract class Protections extends Cell {
 
     @Override
     public String toString() {
-        return getName() + "(+" + getDefense() + " DEF)" + '\n';
+        return getName() + "(" + getDefense() + "/5 DEF)" + '\n';
     }
 
     public String eventDescription() {

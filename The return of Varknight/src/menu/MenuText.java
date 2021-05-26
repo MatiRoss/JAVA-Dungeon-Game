@@ -4,6 +4,17 @@ package menu;
  * Class that uses different methods to display different types of text throughout the game.
  */
 public class MenuText {
+    public void characterSelection() {
+        System.out.println("CHOIX DU PERSONNAGE");
+        System.out.println(" __________________________________________________________________");
+        System.out.println("Créer un nouveau personnage, ou charger un personnage déjà existant");
+        System.out.println(" ------------------------------------------------------------------");
+        System.out.println("");
+        System.out.println("[1] Créer un nouveau personnage");
+        System.out.println("[2] Charger un personnage");
+        System.out.println("[3] Quitter le jeu");
+        System.out.println("");
+    }
 
     public void launchMenu() {
         System.out.println("");
@@ -11,6 +22,9 @@ public class MenuText {
         System.out.println("|___|___|___|___|___| Bienvenue dans D&D: THE RETURN OF VARKNIGHT |___|___|___|___|___|");
         System.out.println("");
         System.out.println("");
+    }
+
+    public void characterCreation() {
         System.out.println("CREATION DU PERSONNAGE");
         System.out.println(" ________________________________________");
         System.out.println("Quelle personnage souhaitez-vous incarner?");
